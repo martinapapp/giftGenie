@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "type":"module",
   "scripts": {
-    "start": "vite"
+    "start": "node --env-file=.env index.js"
   },
   "dependencies": {
     "openai": "^6.15.0"
