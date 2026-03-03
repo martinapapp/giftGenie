@@ -1,0 +1,15 @@
+{
+  "name": "giftgenie",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "openai": "^6.15.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.0"
+  }
+}
