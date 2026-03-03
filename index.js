@@ -19,7 +19,10 @@ async function getGiftSuggestions() {
             messages: [
                 { 
                     role: "user", 
-                    content: "Suggest 3 unique gifts for someone who loves hiphop music." 
+                    content: `Suggest some gifts for someone who loves space. 
+                            Make these suggestions thoughtful and practical. 
+                            Your response must be under 100 words. 
+                            Skip intros and conclusions. Only output gift suggestions.`
                 }
             ],
         })
