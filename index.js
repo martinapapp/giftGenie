@@ -1,5 +1,7 @@
 import {  checkEnvironment, env, autoResizeTextarea, setLoading,  } from "./utils.js"
 import OpenAI from "openai"
+import {marked} from 'marked'
+import DOMPurify from 'dompurify'
 
 checkEnvironment()
 
@@ -49,11 +51,15 @@ async function getGiftSuggestions(e) {
             model: env.VITE_AI_MODEL,
             messages
         })
-        outputContent.textContent = response.choices[0].message.content
+
+        const sanitizedRes = DOMPurify.sanitize(marked.parse(response.choices[0].message.content))
+
+        outputContent.innerHTML = sanitizedRes
 
     } catch (error) {
         console.error(" Something went wrong, please try again later.", error.message)
         outputContent.textContent = "Sorry, I can't access what I need right now. Please try again."
+   
     }finally{
         setLoading(false)
     }
