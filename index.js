@@ -23,150 +23,33 @@ function start() {
 }
 
 // System Prompt
-const messages = [
-  {
-    role: "system",
-    content: `You are the Gift Genie!
-    Make your gift suggestions thoughtful and practical.
-    The user will describe the gift's recipient. 
-    Your response must be in structured Markdown.
-    Each gift must: 
-      - Have a clear heading
-      - A short explanation of why it would work
+const systemPrompt = `You are the Gift Genie that can search the web! 
+        You generate gift ideas that feel thoughtful, specific, and genuinely useful.
+        Your output must be in structured Markdown.
+        Do not write introductions or conclusions.
+        Start directly with the gift suggestions.
 
-    If the user mentions a location or a time constraint,
-    add another section under each gift that gives the user 
-    a step by step guide on where and how they can get the gift.
+        Each gift must:
+            - Have a clear heading with the actual product's name
+            - Include a short explanation of why it works
+            - Include the current price or a price range
+            - Include one or more links to websites or social media business pages
+        where the gift can be bought
 
-    Skip intros and conclusions. 
-    Only output gift suggestions.
-    
-    End with a section with an H3 heading titled "Questions for you" 
-    that contains follow-ups that would help improve the gift suggestions.`,
-  },
-  {
-    role: "user",
-    content: "dubai airport. last minute gifts for niece (arts & crafts) and nephew who loves football"
-  },
-  {
-    role: "assistant",
-    content: `
-        ### Travel Art Kit for Niece (Compact & Portable)
+        Prefer products that are widely available and well-reviewed.
+        If you can't find a working link, say so rather than guessing.
 
-        A small, kid-friendly arts & crafts item that's easy to pack and perfect for a quick creative distraction during travel.
+        If the user mentions a location, situation, or constraint,
+        adapt the gift ideas and add another short section 
+        under each gift that guides the user to get the gift in that 
+        constrained context.
 
-        **How to get it:**
-        1. Head to Dubai International Airport (DXB) and proceed to Terminal 3 Departures.
-        2. Visit Dubai Duty Free or a nearby WHSmith that carries kids’ stationery.
-        3. Ask for compact arts & crafts kits or a coloring book with pencils.
-        4. Choose a lightweight option suitable for carry-on.
-        5. Request gift wrapping if available.
+        After the gift ideas, include a section titled "Questions for you"
+        with clarifying questions that would help improve the recommendations.
 
-        ---
-
-        ### Mini Football Keychain for Nephew
-
-        A light, inexpensive football-themed souvenir that’s easy to carry and perfect for an airport purchase.
-
-        **How to get it:**
-        1. Visit Dubai Duty Free or a souvenir shop near the gates.
-        2. Ask for football-themed keychains or small sports souvenirs.
-        3. Check toy or sports sections if needed.
-        4. Purchase and pack securely.
-
-        ---
-
-        ## Questions for you
-        1. What are the ages of your niece and nephew?
-        2. Do you have a budget per gift?
-        3. Are you departing from Terminal 3?
-        4. Does your nephew support a specific team?`
-    },
-    {
-    role: "user",
-    content: "my christmas secret santa is a major hiphop music fan and we have a 30 CAD budget at the office. week left. I have Amazon prime."
-    },
-    {
-    role: "assistant",
-    content: `
-            ### Hip-Hop Coffee Table Book (Artists, Lyrics, or Culture)
-
-            A well-designed book on hip-hop history, iconic albums, or legendary artists works as a tasteful office-friendly gift that still feels personal to a serious fan.
-
-            **How to get it:**
-
-            1. Open Amazon and make sure you’re on Amazon.ca.
-            2. Search for titles like *“hip hop coffee table book”*, *“hip hop history book”*, or *“rap album art book”*.
-            3. Filter by **Prime eligible** and price under **30 CAD**.
-            4. Check delivery date to ensure arrival within a week.
-            5. Order hardcover if available for a more premium feel.
-
-            ---
-
-            ### Vinyl-Style Hip-Hop Wall Art or Poster
-
-            Minimalist prints featuring classic hip-hop albums, artists, or lyric typography fit well in an office or home setup without being gimmicky.
-
-            **How to get it:**
-
-            1. Search Amazon for *“hip hop wall art”* or *“rap album poster minimalist”*.
-            2. Filter by **Prime** and size (A3 or smaller is safer for offices).
-            3. Read reviews to ensure print quality.
-            4. Order unframed to stay within budget, or framed if still under 30 CAD.
-            5. Consider neutral designs if office taste is conservative.
-
-            ---
-
-            ### High-Quality Hip-Hop Graphic Tee (Low-Key Design)
-
-            A subtle, well-designed T-shirt referencing a classic artist or era is practical and personal without being loud.
-
-            **How to get it:**
-
-            1. Search *“hip hop graphic t shirt”* or specific artists (e.g., Nas, Wu-Tang, Kendrick).
-            2. Filter by **Prime** and check size availability.
-            3. Look for neutral colors (black, grey, off-white).
-            4. Check material and reviews for print durability.
-            5. Order one size up if unsure.
-
-            ---
-
-            ### Hip-Hop Lyric Mug or Desk Accessory
-
-            A mug or desk item featuring iconic lyrics or album references works well as a daily-use office gift.
-
-            **How to get it:**
-
-            1. Search *“hip hop lyric mug”* or *“rap quote mug”* on Amazon.
-            2. Filter Prime-only and check delivery date.
-            3. Avoid novelty fonts; choose clean typography.
-            4. Ensure it’s dishwasher-safe from the product details.
-            5. Order with protective packaging enabled.
-
-            ---
-
-            ### Hip-Hop Inspired Beanie or Cap (Minimal Branding)
-
-            A simple cap or beanie with understated hip-hop influence fits most styles and avoids sizing complexity.
-
-            **How to get it:**
-
-            1. Search *“hip hop cap minimalist”* or *“streetwear beanie”*.
-            2. Filter Prime and price under 30 CAD.
-            3. Choose adjustable caps or one-size beanies.
-            4. Check reviews for fit and fabric quality.
-            5. Order neutral colors to keep it versatile.
-
-            ---
-
-            ## Questions for you
-
-            1. Do you know their favorite hip-hop era (90s, 2000s, modern)?
-            2. Any specific artists they constantly mention?
-            3. Is this a conservative office environment or casual?
-            4. Would you prefer something decorative or something they can use daily?`
-    }
-]
+        Finish with a section with H2 heading titled "Wanna browse yourself?"
+        with links to various ecommerce sites with relevant search queries and filters 
+        already applied.`
 
 async function getGiftSuggestions(e) {
     e.preventDefault()
@@ -176,27 +59,19 @@ async function getGiftSuggestions(e) {
         
     setLoading(true)
 
-    messages.push({
-        role: "user",
-        content: userPrompt
-    })
-
     try {
-        const response = await openai.chat.completions.create({
-            model: env.VITE_AI_MODEL,
-            messages,
-            stream: true
-        })
-        
-        let giftSuggestions = ''
-
         showStream()
 
-        for await(const chunk of response){
-            giftSuggestions += chunk.choices[0].delta.content ?? ""
-            const sanitizedRes = DOMPurify.sanitize(marked.parse(giftSuggestions))
-            outputContent.innerHTML = sanitizedRes
-        }
+        const response = await openai.responses.create({
+            model: env.VITE_AI_MODEL,
+            input : [
+                {role: "system", content: systemPrompt},
+                {role: "user", content: userPrompt}
+            ],
+            tools: [{ type: "web_search_preview"}]
+        })
+        const sanitizedRes = DOMPurify.sanitize(marked.parse(response.output_text))
+        outputContent.innerHTML = sanitizedRes
 
     } catch (error) {
         console.error(" Something went wrong, please try again later.", error.message)
