@@ -1,4 +1,4 @@
-import {  checkEnvironment, env, autoResizeTextarea, setLoading,  } from "./utils.js"
+import {  checkEnvironment, env, autoResizeTextarea, setLoading, showStream } from "./utils.js"
 import OpenAI from "openai"
 import {marked} from 'marked'
 import DOMPurify from 'dompurify'
@@ -37,24 +37,32 @@ const messages = [
 async function getGiftSuggestions(e) {
     e.preventDefault()
 
-    try {
-        const userPrompt = userInput.value.trim()
-        if (!userPrompt) throw new Error("User prompt is empty")
+    const userPrompt = userInput.value.trim()
+    if (!userPrompt) throw new Error("User prompt is empty")
         
-        setLoading(true)
+    setLoading(true)
 
-        messages.push({
-            role: "user",
-            content: userPrompt
-        })
+    messages.push({
+        role: "user",
+        content: userPrompt
+    })
+
+    try {
         const response = await openai.chat.completions.create({
             model: env.VITE_AI_MODEL,
-            messages
+            messages,
+            stream: true
         })
+        
+        let giftSuggestions = ''
 
-        const sanitizedRes = DOMPurify.sanitize(marked.parse(response.choices[0].message.content))
+        showStream()
 
-        outputContent.innerHTML = sanitizedRes
+        for await(const chunk of response){
+            giftSuggestions += chunk.choices[0].delta.content ?? ""
+            const sanitizedRes = DOMPurify.sanitize(marked.parse(giftSuggestions))
+            outputContent.innerHTML = sanitizedRes
+        }
 
     } catch (error) {
         console.error(" Something went wrong, please try again later.", error.message)
