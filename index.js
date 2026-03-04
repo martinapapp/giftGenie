@@ -51,10 +51,11 @@ async function getGiftSuggestions(e) {
         })
         outputContent.textContent = response.choices[0].message.content
 
-        setLoading(false)
-
     } catch (error) {
         console.error(" Something went wrong, please try again later.", error.message)
+        outputContent.textContent = "Sorry, I can't access what I need right now. Please try again."
+    }finally{
+        setLoading(false)
     }
 }
 
