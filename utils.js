@@ -1,4 +1,6 @@
-export const env = typeof import.meta.env !== 'undefined' ? import.meta.env : process.env
+export const env = typeof import.meta.env !== 'undefined' 
+    ? import.meta.env 
+    : process.env
 
 export function checkEnvironment() {
     const required = ['VITE_AI_URL', 'VITE_AI_MODEL', 'VITE_AI_KEY']
@@ -43,10 +45,4 @@ export function setLoading(isLoading) {
         lampButton.classList.add("compact")
         lampText.textContent = "Rub the Lamp"
     }
-}
-
-export function showStream() {
-  const outputContainer = document.getElementById("output-container");
-  outputContainer.classList.remove("hidden");
-  outputContainer.classList.add("visible");
 }
