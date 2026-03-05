@@ -1,10 +1,10 @@
-export const env = typeof import.meta.env !== 'undefined' 
-    ? import.meta.env 
+export const env = typeof import.meta.env !== 'undefined'
+    ? import.meta.env
     : process.env
 
 export function checkEnvironment() {
-    const required = ['VITE_AI_URL', 'VITE_AI_MODEL', 'VITE_AI_KEY']
-    
+    const required = ['AI_URL', 'AI_MODEL', 'AI_KEY']  // ← remove VITE_ prefix
+
     for (const key of required) {
         if (!env[key]) {
             throw new Error(`Environment Error: Missing ${key} in .env file.`)
