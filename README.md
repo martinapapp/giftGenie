@@ -1,4 +1,4 @@
-# Gift Genie 🧞
+# Gift Genie
 
 ![MIT License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-v22-brightgreen)
@@ -7,6 +7,8 @@
 ![OpenAI](https://img.shields.io/badge/openai-6.x-412991)
 
 An AI-powered gift idea generator. Describe who you're shopping for, set a budget, and let the Genie do the rest.
+
+*[link here](https://gift-genie-r6gd.onrender.com/)*
 
 ## Index
 
